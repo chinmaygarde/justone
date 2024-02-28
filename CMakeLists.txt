@@ -13,15 +13,25 @@ endif()
 project(justone)
 
 add_subdirectory(third_party/googletest EXCLUDE_FROM_ALL)
+add_subdirectory(third_party/fml EXCLUDE_FROM_ALL)
 
 enable_testing()
 include(GoogleTest)
 
 add_executable(justone
   src/unittests.cc
+  src/context.cc
+  src/context.h
+)
+
+target_include_directories(justone
+  PUBLIC
+    third_party/vulkan_headers/include
+    src
 )
 
 target_link_libraries(justone
-  PRIVATE
+  PUBLIC
     gtest_main
+    fml
 )
