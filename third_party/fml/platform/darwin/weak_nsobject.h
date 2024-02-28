@@ -11,11 +11,11 @@
 #include <stdlib.h>
 
 #include <utility>
-#include "flutter/fml/compiler_specific.h"
-#include "flutter/fml/logging.h"
-#include "flutter/fml/memory/ref_counted.h"
-#include "flutter/fml/memory/ref_ptr.h"
-#include "flutter/fml/memory/thread_checker.h"
+#include "fml/compiler_specific.h"
+#include "fml/logging.h"
+#include "fml/memory/ref_counted.h"
+#include "fml/memory/ref_ptr.h"
+#include "fml/memory/thread_checker.h"
 
 namespace debug {
 struct DebugThreadChecker {
@@ -53,8 +53,8 @@ struct DebugThreadChecker {
 //   same thread that the WeakNSObject is created on.
 //
 // fml specifics:
-// WeakNSObjects can only originate from a |WeakNSObjectFactory| (see below), though WeakNSObjects
-// are copyable and movable.
+// WeakNSObjects can only originate from a |WeakNSObjectFactory| (see below),
+// though WeakNSObjects are copyable and movable.
 //
 // WeakNSObjects are not in general thread-safe. They may only be *used* on
 // a single thread, namely the same thread as the "originating"
@@ -90,7 +90,9 @@ class WeakContainer : public fml::RefCountedThreadSafe<WeakContainer> {
 
   __unsafe_unretained id object_;
 
-  void CheckThreadSafety() const { FML_DCHECK_CREATION_THREAD_IS_CURRENT(checker_.checker); }
+  void CheckThreadSafety() const {
+    FML_DCHECK_CREATION_THREAD_IS_CURRENT(checker_.checker);
+  }
 
 // checker_ is unused in non-unopt mode.
 #pragma clang diagnostic push
@@ -108,7 +110,8 @@ class WeakContainer : public fml::RefCountedThreadSafe<WeakContainer> {
 // Return the only associated container for this object. There can be only one.
 // Will return null if object is nil .
 + (fml::RefPtr<fml::WeakContainer>)containerForObject:(id)object
-                                        threadChecker:(debug::DebugThreadChecker)checker;
+                                        threadChecker:
+                                            (debug::DebugThreadChecker)checker;
 @end
 
 namespace fml {
@@ -127,7 +130,8 @@ class WeakNSProtocol {
   ~WeakNSProtocol() = default;
 
   void reset() {
-    container_ = [CRBWeakNSProtocolSentinel containerForObject:nil threadChecker:checker_];
+    container_ = [CRBWeakNSProtocolSentinel containerForObject:nil
+                                                 threadChecker:checker_];
   }
 
   NST get() const {
@@ -173,7 +177,9 @@ class WeakNSProtocol {
   // Refecounted reference to the container tracking the ObjectiveC object this
   // class encapsulates.
   RefPtr<fml::WeakContainer> container_;
-  void CheckThreadSafety() const { FML_DCHECK_CREATION_THREAD_IS_CURRENT(checker_.checker); }
+  void CheckThreadSafety() const {
+    FML_DCHECK_CREATION_THREAD_IS_CURRENT(checker_.checker);
+  }
 
   debug::DebugThreadChecker checker_;
 };
@@ -203,7 +209,8 @@ class WeakNSObject : public WeakNSProtocol<NST*> {
  private:
   friend class WeakNSObjectFactory<NST>;
 
-  explicit WeakNSObject(RefPtr<fml::WeakContainer> container, debug::DebugThreadChecker checker)
+  explicit WeakNSObject(RefPtr<fml::WeakContainer> container,
+                        debug::DebugThreadChecker checker)
       : WeakNSProtocol<NST*>(container, checker) {}
 };
 
@@ -227,9 +234,9 @@ class WeakNSObject<id> : public WeakNSProtocol<id> {
       : WeakNSProtocol<id>(container, checker) {}
 };
 
-// Class that produces (valid) |WeakNSObject<NST>|s. Typically, this is used as a
-// member variable of |NST| (preferably the last one -- see below), and |NST|'s
-// methods control how WeakNSObjects to it are vended. This class is not
+// Class that produces (valid) |WeakNSObject<NST>|s. Typically, this is used as
+// a member variable of |NST| (preferably the last one -- see below), and
+// |NST|'s methods control how WeakNSObjects to it are vended. This class is not
 // thread-safe, and should only be created, destroyed and used on a single
 // thread.
 //
@@ -256,21 +263,26 @@ class WeakNSObjectFactory {
  public:
   explicit WeakNSObjectFactory(NST* object) {
     FML_DCHECK(object);
-    container_ = [CRBWeakNSProtocolSentinel containerForObject:object threadChecker:checker_];
+    container_ = [CRBWeakNSProtocolSentinel containerForObject:object
+                                                 threadChecker:checker_];
   }
 
   ~WeakNSObjectFactory() { CheckThreadSafety(); }
 
   // Gets a new weak pointer, which will be valid until this object is
   // destroyed.e
-  WeakNSObject<NST> GetWeakNSObject() const { return WeakNSObject<NST>(container_, checker_); }
+  WeakNSObject<NST> GetWeakNSObject() const {
+    return WeakNSObject<NST>(container_, checker_);
+  }
 
  private:
   // Refecounted reference to the container tracking the ObjectiveC object this
   // class encapsulates.
   RefPtr<fml::WeakContainer> container_;
 
-  void CheckThreadSafety() const { FML_DCHECK_CREATION_THREAD_IS_CURRENT(checker_.checker); }
+  void CheckThreadSafety() const {
+    FML_DCHECK_CREATION_THREAD_IS_CURRENT(checker_.checker);
+  }
 
   debug::DebugThreadChecker checker_;
 

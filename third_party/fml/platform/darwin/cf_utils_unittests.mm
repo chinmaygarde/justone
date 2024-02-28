@@ -2,15 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "flutter/fml/platform/darwin/cf_utils.h"
+#include "fml/platform/darwin/cf_utils.h"
 
-#include "flutter/testing/testing.h"
+#include "testing/testing.h"
 
 namespace fml {
 namespace testing {
 
 TEST(CFTest, CanCreateRefs) {
-  CFRef<CFMutableStringRef> string(CFStringCreateMutable(kCFAllocatorDefault, 100u));
+  CFRef<CFMutableStringRef> string(
+      CFStringCreateMutable(kCFAllocatorDefault, 100u));
   // Cast
   ASSERT_TRUE(static_cast<bool>(string));
   ASSERT_TRUE(string);

@@ -7,10 +7,10 @@
 #include <thread>
 #include <utility>
 
-#include "flutter/fml/message_loop_task_queues.h"
-#include "flutter/fml/synchronization/count_down_latch.h"
-#include "flutter/fml/synchronization/waitable_event.h"
-#include "flutter/fml/time/chrono_timestamp_provider.h"
+#include "fml/message_loop_task_queues.h"
+#include "fml/synchronization/count_down_latch.h"
+#include "fml/synchronization/waitable_event.h"
+#include "fml/time/chrono_timestamp_provider.h"
 #include "gtest/gtest.h"
 
 namespace fml {
@@ -54,11 +54,13 @@ TEST(MessageLoopTaskQueueMergeUnmerge,
   auto queue_id_1 = task_queue->CreateTaskQueue();
   auto queue_id_2 = task_queue->CreateTaskQueue();
 
-  task_queue->RegisterTask(queue_id_1, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_1, []() {}, ChronoTicksSinceEpoch());
   ASSERT_EQ(1u, task_queue->GetNumPendingTasks(queue_id_1));
 
   task_queue->Merge(queue_id_1, queue_id_2);
-  task_queue->RegisterTask(queue_id_1, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_1, []() {}, ChronoTicksSinceEpoch());
 
   ASSERT_EQ(2u, task_queue->GetNumPendingTasks(queue_id_1));
   ASSERT_EQ(0u, task_queue->GetNumPendingTasks(queue_id_2));
@@ -71,7 +73,8 @@ TEST(MessageLoopTaskQueueMergeUnmerge,
   auto queue_id_1 = task_queue->CreateTaskQueue();
   auto queue_id_2 = task_queue->CreateTaskQueue();
 
-  task_queue->RegisterTask(queue_id_2, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_2, []() {}, ChronoTicksSinceEpoch());
   ASSERT_EQ(1u, task_queue->GetNumPendingTasks(queue_id_2));
 
   task_queue->Merge(queue_id_1, queue_id_2);
@@ -85,8 +88,10 @@ TEST(MessageLoopTaskQueueMergeUnmerge, MergeUnmergeTasksPreserved) {
   auto queue_id_1 = task_queue->CreateTaskQueue();
   auto queue_id_2 = task_queue->CreateTaskQueue();
 
-  task_queue->RegisterTask(queue_id_1, []() {}, ChronoTicksSinceEpoch());
-  task_queue->RegisterTask(queue_id_2, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_1, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_2, []() {}, ChronoTicksSinceEpoch());
 
   ASSERT_EQ(1u, task_queue->GetNumPendingTasks(queue_id_1));
   ASSERT_EQ(1u, task_queue->GetNumPendingTasks(queue_id_2));
@@ -195,7 +200,8 @@ TEST(MessageLoopTaskQueueMergeUnmerge, MergeInvokesBothWakeables) {
   task_queue->SetWakeable(queue_id_1, wakeable1.get());
   task_queue->SetWakeable(queue_id_2, wakeable2.get());
 
-  task_queue->RegisterTask(queue_id_1, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_1, []() {}, ChronoTicksSinceEpoch());
 
   task_queue->Merge(queue_id_1, queue_id_2);
 
@@ -221,8 +227,10 @@ TEST(MessageLoopTaskQueueMergeUnmerge,
   task_queue->SetWakeable(queue_id_1, wakeable1.get());
   task_queue->SetWakeable(queue_id_2, wakeable2.get());
 
-  task_queue->RegisterTask(queue_id_1, []() {}, ChronoTicksSinceEpoch());
-  task_queue->RegisterTask(queue_id_2, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_1, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_2, []() {}, ChronoTicksSinceEpoch());
 
   task_queue->Merge(queue_id_1, queue_id_2);
   task_queue->Unmerge(queue_id_1, queue_id_2);
@@ -250,7 +258,8 @@ TEST(MessageLoopTaskQueueMergeUnmerge, GetTasksToRunNowBlocksMerge) {
     wake_up_end.Wait();
   });
 
-  task_queue->RegisterTask(queue_id_1, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_1, []() {}, ChronoTicksSinceEpoch());
   task_queue->SetWakeable(queue_id_1, wakeable.get());
 
   std::thread tasks_to_run_now_thread(
@@ -298,7 +307,8 @@ TEST(MessageLoopTaskQueueMergeUnmerge,
       queue_id_2, [&]() { task_queue->Merge(queue_id_1, queue_id_2); },
       ChronoTicksSinceEpoch());
 
-  task_queue->RegisterTask(queue_id_2, []() {}, ChronoTicksSinceEpoch());
+  task_queue->RegisterTask(
+      queue_id_2, []() {}, ChronoTicksSinceEpoch());
 
   ASSERT_EQ(CountRemainingTasks(task_queue, queue_id_2, true), 1);
   ASSERT_EQ(CountRemainingTasks(task_queue, queue_id_1, true), 1);

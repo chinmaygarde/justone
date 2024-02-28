@@ -22,8 +22,6 @@ add_library(fml
   hash_combine.h
   hex_codec.cc
   hex_codec.h
-  icu_util.cc
-  icu_util.h
   log_level.h
   log_settings.cc
   log_settings.h
@@ -83,11 +81,13 @@ add_library(fml
   time/time_point.cc
   time/time_point.h
   time/timestamp_provider.h
-  trace_event.cc
-  trace_event.h
   unique_fd.cc
   unique_fd.h
   unique_object.h
   wakeable.h
 )
 
+target_include_directories(fml
+  PUBLIC
+    ..
+)

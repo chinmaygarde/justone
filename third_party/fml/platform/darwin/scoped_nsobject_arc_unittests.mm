@@ -6,8 +6,8 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#include "flutter/fml/platform/darwin/scoped_nsobject.h"
 #include "fml/logging.h"
+#include "fml/platform/darwin/scoped_nsobject.h"
 #include "gtest/gtest.h"
 
 #if !defined(__has_feature) || !__has_feature(objc_arc)

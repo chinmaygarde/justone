@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "flutter/fml/platform/darwin/weak_nsobject.h"
-#include "flutter/fml/platform/darwin/scoped_nsautorelease_pool.h"
-#include "flutter/fml/platform/darwin/scoped_nsobject.h"
+#include "fml/platform/darwin/weak_nsobject.h"
+#include "fml/platform/darwin/scoped_nsautorelease_pool.h"
+#include "fml/platform/darwin/scoped_nsobject.h"
 
 namespace {
 // The key needed by objc_setAssociatedObject.
@@ -13,7 +13,8 @@ char sentinelObserverKey_;
 
 namespace fml {
 
-WeakContainer::WeakContainer(id object, const debug::DebugThreadChecker& checker)
+WeakContainer::WeakContainer(id object,
+                             const debug::DebugThreadChecker& checker)
     : object_(object), checker_(checker) {}
 
 WeakContainer::~WeakContainer() {}
@@ -30,19 +31,24 @@ WeakContainer::~WeakContainer() {}
 @implementation CRBWeakNSProtocolSentinel
 
 + (fml::RefPtr<fml::WeakContainer>)containerForObject:(id)object
-                                        threadChecker:(debug::DebugThreadChecker)checker {
+                                        threadChecker:
+                                            (debug::DebugThreadChecker)checker {
   if (object == nil) {
     return nullptr;
   }
   // The autoreleasePool is needed here as the call to objc_getAssociatedObject
   // returns an autoreleased object which is better released sooner than later.
   fml::ScopedNSAutoreleasePool pool;
-  CRBWeakNSProtocolSentinel* sentinel = objc_getAssociatedObject(object, &sentinelObserverKey_);
+  CRBWeakNSProtocolSentinel* sentinel =
+      objc_getAssociatedObject(object, &sentinelObserverKey_);
   if (!sentinel) {
-    fml::scoped_nsobject<CRBWeakNSProtocolSentinel> newSentinel([[CRBWeakNSProtocolSentinel alloc]
-        initWithContainer:AdoptRef(new fml::WeakContainer(object, checker))]);
+    fml::scoped_nsobject<CRBWeakNSProtocolSentinel> newSentinel(
+        [[CRBWeakNSProtocolSentinel alloc]
+            initWithContainer:AdoptRef(
+                                  new fml::WeakContainer(object, checker))]);
     sentinel = newSentinel;
-    objc_setAssociatedObject(object, &sentinelObserverKey_, sentinel, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(object, &sentinelObserverKey_, sentinel,
+                             OBJC_ASSOCIATION_RETAIN);
     // The retain count is 2. One retain is due to the alloc, the other to the
     // association with the weak object.
     FML_DCHECK(2u == [sentinel retainCount]);

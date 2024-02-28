@@ -4,8 +4,8 @@
 
 #include <vector>
 
-#include "flutter/fml/platform/darwin/scoped_nsautorelease_pool.h"
-#include "flutter/fml/platform/darwin/scoped_nsobject.h"
+#include "fml/platform/darwin/scoped_nsautorelease_pool.h"
+#include "fml/platform/darwin/scoped_nsobject.h"
 #include "gtest/gtest.h"
 
 namespace {

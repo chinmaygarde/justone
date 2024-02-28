@@ -2,15 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "flutter/fml/message_loop_task_queues.h"
+#include "fml/message_loop_task_queues.h"
 
 #include <cassert>
 #include <string>
 #include <thread>
 #include <vector>
 
-#include "flutter/benchmarking/benchmarking.h"
-#include "flutter/fml/synchronization/count_down_latch.h"
+#include "benchmarking/benchmarking.h"
+#include "fml/synchronization/count_down_latch.h"
 
 namespace fml {
 namespace benchmarking {
@@ -37,7 +37,8 @@ static void BM_RegisterAndGetTasks(benchmark::State& state) {  // NOLINT
       threads.emplace_back([task_runner_id = i, &task_queue, past, &tasks_done,
                             &tasks_registered]() {
         for (int j = 0; j < num_tasks_per_queue; j++) {
-          task_queue->RegisterTask(TaskQueueId(task_runner_id), [] {}, past);
+          task_queue->RegisterTask(
+              TaskQueueId(task_runner_id), [] {}, past);
         }
         tasks_registered.CountDown();
         tasks_registered.Wait();

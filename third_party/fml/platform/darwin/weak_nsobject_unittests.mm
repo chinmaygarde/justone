@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "flutter/fml/message_loop.h"
-#include "flutter/fml/platform/darwin/scoped_nsobject.h"
-#include "flutter/fml/platform/darwin/weak_nsobject.h"
-#include "flutter/fml/task_runner.h"
-#include "flutter/fml/thread.h"
+#include "fml/message_loop.h"
+#include "fml/platform/darwin/scoped_nsobject.h"
+#include "fml/platform/darwin/weak_nsobject.h"
+#include "fml/task_runner.h"
+#include "fml/thread.h"
 #include "gtest/gtest.h"
 
 namespace fml {
