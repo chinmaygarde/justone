@@ -11,3 +11,17 @@ if(CCACHE_PROGRAM)
 endif()
 
 project(justone)
+
+add_subdirectory(third_party/googletest EXCLUDE_FROM_ALL)
+
+enable_testing()
+include(GoogleTest)
+
+add_executable(justone
+  src/unittests.cc
+)
+
+target_link_libraries(justone
+  PRIVATE
+    gtest_main
+)
