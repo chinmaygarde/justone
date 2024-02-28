@@ -85,6 +85,12 @@ add_library(fml
   unique_fd.h
   unique_object.h
   wakeable.h
+  platform/posix/command_line_posix.cc
+  platform/posix/file_posix.cc
+  platform/posix/mapping_posix.cc
+  platform/posix/native_library_posix.cc
+  platform/posix/paths_posix.cc
+  platform/posix/posix_wrappers_posix.cc
 )
 
 target_include_directories(fml

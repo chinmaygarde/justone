@@ -14,6 +14,7 @@ project(justone)
 
 add_subdirectory(third_party/googletest EXCLUDE_FROM_ALL)
 add_subdirectory(third_party/fml EXCLUDE_FROM_ALL)
+add_subdirectory(third_party/glfw EXCLUDE_FROM_ALL)
 
 enable_testing()
 include(GoogleTest)
@@ -22,6 +23,12 @@ add_executable(justone
   src/unittests.cc
   src/context.cc
   src/context.h
+  src/macros.h
+  src/playground_test.h
+  src/playground_test.cc
+  src/vk.h
+  src/caps.h
+  src/caps.cc
 )
 
 target_include_directories(justone
@@ -34,4 +41,5 @@ target_link_libraries(justone
   PUBLIC
     gtest_main
     fml
+    glfw
 )
