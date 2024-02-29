@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fml/macros.h"
+#include "glm/glm/vec2.hpp"
 #include "gtest/gtest.h"
 #include "vk.h"
 
@@ -15,6 +16,7 @@ class PlaygroundTest : public ::testing::Test {
   PFN_vkGetInstanceProcAddr GetInstanceProcAddress() const;
 
  private:
+  glm::ivec2 window_size_;
   FML_DISALLOW_COPY_AND_ASSIGN(PlaygroundTest);
 };
 

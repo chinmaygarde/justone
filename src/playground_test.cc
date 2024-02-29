@@ -31,6 +31,17 @@ PlaygroundTest::PlaygroundTest() {
   InitGLFWVulkanOnce();
   FML_CHECK(::glfwVulkanSupported())
       << "Vulkan must be supported on this platform";
+  ::glfwDefaultWindowHints();
+  ::glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  auto window = ::glfwCreateWindow(1280, 800, "Just One", nullptr, nullptr);
+  if (!window) {
+    FML_LOG(ERROR) << "Unable to create glfw window";
+    return;
+  }
+  int width = 0;
+  int height = 0;
+  ::glfwGetWindowSize(window, &width, &height);
+  window_size_ = {width, height};
 }
 
 PlaygroundTest::~PlaygroundTest() = default;
