@@ -2,7 +2,7 @@
   "build_systems": [
     {
       "name": "Just One Build All",
-      "shell_cmd": "ninja && ./justone --gtest_filter=\"*\"",
+      "shell_cmd": "ninja && justone --gtest_filter=\"*\"",
       "working_dir": "${project_path}/build",
       "file_regex": "(.*):(\\d+):(\\d+)(.*)",
       "shell": true,

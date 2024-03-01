@@ -19,6 +19,11 @@ add_subdirectory(third_party/glfw EXCLUDE_FROM_ALL)
 enable_testing()
 include(GoogleTest)
 
+add_compile_definitions(
+  _CRT_SECURE_NO_WARNINGS
+  VULKAN_HPP_NO_SPACESHIP_OPERATOR
+)
+
 add_executable(justone
   src/unittests.cc
   src/context.cc

@@ -85,15 +85,28 @@ add_library(fml
   unique_fd.h
   unique_object.h
   wakeable.h
-  platform/posix/command_line_posix.cc
-  platform/posix/file_posix.cc
-  platform/posix/mapping_posix.cc
-  platform/posix/native_library_posix.cc
-  platform/posix/paths_posix.cc
-  platform/posix/posix_wrappers_posix.cc
+  platform/win/command_line_win.cc
+  platform/win/errors_win.cc
+  platform/win/errors_win.h
+  platform/win/file_win.cc
+  platform/win/mapping_win.cc
+  platform/win/message_loop_win.cc
+  platform/win/message_loop_win.h
+  platform/win/native_library_win.cc
+  platform/win/paths_win.cc
+  platform/win/posix_wrappers_win.cc
+  platform/win/wstring_conversion.cc
+  platform/win/wstring_conversion.h
 )
 
 target_include_directories(fml
   PUBLIC
     ..
+)
+
+target_compile_definitions(fml
+  PUBLIC
+    UNICODE
+    NOMINMAX
+    _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 )
