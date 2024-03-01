@@ -40,7 +40,7 @@ Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback) {
   application_info.applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
   application_info.pEngineName = "JustOne";
   application_info.engineVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
-  application_info.apiVersion = VK_MAKE_API_VERSION(0, 1, 1, 0);
+  application_info.apiVersion = VK_MAKE_API_VERSION(0, 1, 3, 0);
 
   vk::InstanceCreateInfo instance_info;
   instance_info.setPApplicationInfo(&application_info);
