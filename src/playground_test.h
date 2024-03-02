@@ -1,9 +1,13 @@
 #pragma once
 
 #include "fml/macros.h"
+#include "fml/unique_object.h"
 #include "glm/glm/vec2.hpp"
 #include "gtest/gtest.h"
 #include "vk.h"
+
+// Must be included after vk.h to enable the Vulkan defines.
+#include "GLFW/glfw3.h"
 
 namespace one::testing {
 
@@ -15,8 +19,22 @@ class PlaygroundTest : public ::testing::Test {
 
   PFN_vkGetInstanceProcAddr GetInstanceProcAddress() const;
 
+  bool OpenPlaygroundHere();
+
+  bool IsValid() const { return window_.is_valid(); }
+
  private:
-  glm::ivec2 window_size_;
+  struct UniqueGLFWWindowTraits {
+    static GLFWwindow* InvalidValue() { return nullptr; }
+
+    static bool IsValid(const GLFWwindow* value) {
+      return value != InvalidValue();
+    }
+
+    static void Free(GLFWwindow* window) { glfwDestroyWindow(window); }
+  };
+
+  fml::UniqueObject<GLFWwindow*, UniqueGLFWWindowTraits> window_;
   FML_DISALLOW_COPY_AND_ASSIGN(PlaygroundTest);
 };
 

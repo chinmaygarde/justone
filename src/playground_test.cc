@@ -1,4 +1,3 @@
-
 #include "playground_test.h"
 
 #include <mutex>
@@ -19,22 +18,48 @@ PlaygroundTest::PlaygroundTest() {
       << "Vulkan must be supported on this platform";
   ::glfwDefaultWindowHints();
   ::glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-  auto window = ::glfwCreateWindow(1280, 800, "Just One", nullptr, nullptr);
+  auto window = ::glfwCreateWindow(3000, 2000, "Just One", nullptr, nullptr);
   if (!window) {
     FML_LOG(ERROR) << "Unable to create glfw window";
     return;
   }
-  int width = 0;
-  int height = 0;
-  ::glfwGetWindowSize(window, &width, &height);
-  window_size_ = {width, height};
+  window_.reset(window);
 }
 
 PlaygroundTest::~PlaygroundTest() = default;
 
 PFN_vkGetInstanceProcAddr PlaygroundTest::GetInstanceProcAddress() const {
   return (PFN_vkGetInstanceProcAddr)::glfwGetInstanceProcAddress(
-      NULL, "vkGetInstanceProcAddr");
+      nullptr, "vkGetInstanceProcAddr");
+}
+
+static void PlaygroundKeyCallback(GLFWwindow* window,
+                                  int key,
+                                  int scancode,
+                                  int action,
+                                  int mods) {
+  if ((key == GLFW_KEY_ESCAPE) && action == GLFW_RELEASE) {
+    ::glfwSetWindowShouldClose(window, GLFW_TRUE);
+  }
+}
+
+bool PlaygroundTest::OpenPlaygroundHere() {
+  if (!IsValid()) {
+    return false;
+  }
+
+  ::glfwSetWindowTitle(window_.get(), "JustOne Playground (Press ESC to quit)");
+  ::glfwSetWindowUserPointer(window_.get(), this);
+  ::glfwSetKeyCallback(window_.get(), &PlaygroundKeyCallback);
+
+  while (true) {
+    ::glfwPollEvents();
+    if (::glfwWindowShouldClose(window_.get())) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 }  // namespace one::testing

@@ -22,4 +22,8 @@ TEST_F(PlaygroundTest, CanDecodeImage) {
   EXPECT_EQ(decoder.GetSize().y, 378u);
 }
 
+TEST_F(PlaygroundTest, CanShowWindow) {
+  ASSERT_TRUE(OpenPlaygroundHere());
+}
+
 }  // namespace one::testing

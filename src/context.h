@@ -4,7 +4,6 @@
 
 #include "capabilities.h"
 #include "fml/macros.h"
-#include "macros.h"
 #include "vk.h"
 
 namespace one {
