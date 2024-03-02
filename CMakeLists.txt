@@ -25,15 +25,15 @@ add_compile_definitions(
 )
 
 add_executable(justone
-  src/unittests.cc
+  src/capabilities.cc
+  src/capabilities.h
   src/context.cc
   src/context.h
   src/macros.h
-  src/playground_test.h
   src/playground_test.cc
+  src/playground_test.h
+  src/unittests.cc
   src/vk.h
-  src/caps.h
-  src/caps.cc
 )
 
 target_include_directories(justone

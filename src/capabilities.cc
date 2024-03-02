@@ -1,8 +1,9 @@
-#include "caps.h"
+#include "capabilities.h"
+
 #include <algorithm>
+
 #include "fml/logging.h"
-#include "vulkan/vulkan_enums.hpp"
-#include "vulkan/vulkan_handles.hpp"
+#include "vk.h"
 
 namespace one {
 

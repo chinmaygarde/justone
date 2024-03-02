@@ -6,7 +6,6 @@
 
 #include "fml/macros.h"
 #include "vk.h"
-#include "vulkan/vulkan_handles.hpp"
 
 namespace one {
 
@@ -17,8 +16,6 @@ class Capabilities {
   ~Capabilities();
 
   bool IsValid() const { return is_valid_; }
-
-  bool HasValidationLayers() const { return has_validation_layers_; }
 
   bool HasExtension(const std::string& ext) const {
     return extensions_.contains(ext);

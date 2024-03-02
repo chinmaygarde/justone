@@ -1,11 +1,11 @@
 #pragma once
 
 #include <memory>
-#include "caps.h"
+
+#include "capabilities.h"
 #include "fml/macros.h"
 #include "macros.h"
 #include "vk.h"
-#include "vulkan/vulkan_handles.hpp"
 
 namespace one {
 

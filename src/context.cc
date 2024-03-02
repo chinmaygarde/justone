@@ -6,15 +6,9 @@
 #include <optional>
 #include <queue>
 
-#include "caps.h"
+#include "capabilities.h"
 #include "fml/logging.h"
 #include "vk.h"
-#include "vulkan/vulkan_core.h"
-#include "vulkan/vulkan_enums.hpp"
-#include "vulkan/vulkan_handles.hpp"
-#include "vulkan/vulkan_hpp_macros.hpp"
-#include "vulkan/vulkan_structs.hpp"
-#include "vulkan/vulkan_to_string.hpp"
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
