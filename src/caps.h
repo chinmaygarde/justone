@@ -2,17 +2,19 @@
 
 #include <set>
 #include <string>
+#include <vector>
 
 #include "fml/macros.h"
 #include "vk.h"
+#include "vulkan/vulkan_handles.hpp"
 
 namespace one {
 
-class Caps {
+class Capabilities {
  public:
-  Caps();
+  Capabilities();
 
-  ~Caps();
+  ~Capabilities();
 
   bool IsValid() const { return is_valid_; }
 
@@ -22,12 +24,23 @@ class Caps {
     return extensions_.contains(ext);
   }
 
+  static void DumpToLog();
+
+  static void DumpToLog(const vk::PhysicalDevice& device);
+
+  static bool InstanceHasAllExtensions(
+      const std::vector<std::string>& extensions);
+
+  static bool DeviceHasAllExtensions(
+      const vk::PhysicalDevice& device,
+      const std::vector<std::string>& extensions);
+
  private:
   bool has_validation_layers_ = false;
   std::set<std::string> extensions_;
   bool is_valid_ = false;
 
-  FML_DISALLOW_COPY_AND_ASSIGN(Caps);
+  FML_DISALLOW_COPY_AND_ASSIGN(Capabilities);
 };
 
 }  // namespace one

@@ -1,11 +1,12 @@
 #include "caps.h"
 #include <algorithm>
+#include "fml/logging.h"
 #include "vulkan/vulkan_enums.hpp"
 #include "vulkan/vulkan_handles.hpp"
 
 namespace one {
 
-Caps::Caps() {
+Capabilities::Capabilities() {
   auto layers = vk::enumerateInstanceLayerProperties();
   if (layers.result != vk::Result::eSuccess) {
     return;
@@ -26,6 +27,68 @@ Caps::Caps() {
   is_valid_ = true;
 }
 
-Caps::~Caps() = default;
+Capabilities::~Capabilities() = default;
+
+void Capabilities::DumpToLog() {
+  if (auto layers = vk::enumerateInstanceLayerProperties();
+      layers.result == vk::Result::eSuccess) {
+    FML_LOG(IMPORTANT) << "Found " << layers.value.size() << " layers.";
+    for (const auto& layer : layers.value) {
+      FML_LOG(IMPORTANT) << layer.layerName;
+    }
+  }
+  if (auto exts = vk::enumerateInstanceExtensionProperties();
+      exts.result == vk::Result::eSuccess) {
+    FML_LOG(IMPORTANT) << "Found " << exts.value.size() << " extensions.";
+    for (const auto& ext : exts.value) {
+      FML_LOG(IMPORTANT) << ext.extensionName << "(" << ext.specVersion << ")";
+    }
+  }
+}
+
+void Capabilities::DumpToLog(const vk::PhysicalDevice& device) {
+  const auto props = device.getProperties2();
+  FML_LOG(IMPORTANT) << "Device Name: " << props.properties.deviceName;
+  if (auto exts = device.enumerateDeviceExtensionProperties();
+      exts.result == vk::Result::eSuccess) {
+    FML_LOG(IMPORTANT) << "Found " << exts.value.size() << " extensions.";
+    for (const auto& ext : exts.value) {
+      FML_LOG(IMPORTANT) << ext.extensionName << "(" << ext.specVersion << ")";
+    }
+  }
+}
+
+bool Capabilities::InstanceHasAllExtensions(
+    const std::vector<std::string>& extensions) {
+  std::set<std::string> supported_extensions;
+  for (const auto& ext : vk::enumerateInstanceExtensionProperties().value) {
+    supported_extensions.insert(ext.extensionName);
+  }
+  for (const auto& ext : extensions) {
+    if (!supported_extensions.contains(ext)) {
+      FML_LOG(ERROR) << "Device doesn't support extension: " << ext;
+      return false;
+    }
+  }
+  return true;
+}
+
+bool Capabilities::DeviceHasAllExtensions(
+    const vk::PhysicalDevice& device,
+    const std::vector<std::string>& extensions) {
+  std::set<std::string> supported_extensions;
+  for (const auto& ext : device.enumerateDeviceExtensionProperties().value) {
+    supported_extensions.insert(ext.extensionName);
+  }
+
+  for (const auto& ext : extensions) {
+    if (!supported_extensions.contains(ext)) {
+      FML_LOG(ERROR) << "Device doesn't support extension: " << ext;
+      return false;
+    }
+  }
+
+  return true;
+}
 
 }  // namespace one
