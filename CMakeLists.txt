@@ -24,6 +24,9 @@ add_compile_definitions(
   VULKAN_HPP_NO_SPACESHIP_OPERATOR
 )
 
+get_filename_component(JUSTONE_ASSETS_LOCATION assets ABSOLUTE)
+configure_file(src/assets_location.h.in assets_location.h @ONLY)
+
 add_executable(justone
   src/capabilities.cc
   src/capabilities.h
@@ -32,6 +35,8 @@ add_executable(justone
   src/macros.h
   src/playground_test.cc
   src/playground_test.h
+  src/image_decoder.cc
+  src/image_decoder.h
   src/unittests.cc
   src/vk.h
 )
@@ -39,7 +44,9 @@ add_executable(justone
 target_include_directories(justone
   PUBLIC
     third_party/vulkan_headers/include
+    third_party/stb
     src
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_link_libraries(justone
@@ -47,4 +54,6 @@ target_link_libraries(justone
     gtest_main
     fml
     glfw
+    Rpcrt4.lib
+    Shlwapi.lib
 )

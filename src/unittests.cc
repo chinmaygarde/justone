@@ -1,5 +1,8 @@
+#include "assets_location.h"
 #include "context.h"
+#include "fml/mapping.h"
 #include "gtest/gtest.h"
+#include "image_decoder.h"
 #include "playground_test.h"
 
 namespace one::testing {
@@ -7,6 +10,16 @@ namespace one::testing {
 TEST_F(PlaygroundTest, CanCreateContext) {
   Context context(GetInstanceProcAddress());
   ASSERT_TRUE(context.IsValid());
+}
+
+TEST_F(PlaygroundTest, CanDecodeImage) {
+  auto airplane =
+      fml::FileMapping::CreateReadOnly(JUSTONE_ASSETS_LOCATION "airplane.jpg");
+  ASSERT_TRUE(airplane && airplane->IsValid());
+  ImageDecoder decoder(*airplane);
+  EXPECT_TRUE(decoder.IsValid());
+  EXPECT_EQ(decoder.GetSize().x, 487u);
+  EXPECT_EQ(decoder.GetSize().y, 378u);
 }
 
 }  // namespace one::testing

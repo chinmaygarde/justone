@@ -1,0 +1,3 @@
+#pragma once
+
+#cmakedefine JUSTONE_ASSETS_LOCATION "@JUSTONE_ASSETS_LOCATION@" "/"
