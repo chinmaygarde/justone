@@ -1,5 +1,6 @@
 #pragma once
 
+#include "context.h"
 #include "fml/macros.h"
 #include "fml/unique_object.h"
 #include "glm/glm/vec2.hpp"
@@ -8,6 +9,7 @@
 
 // Must be included after vk.h to enable the Vulkan defines.
 #include "GLFW/glfw3.h"
+#include "vulkan/vulkan_handles.hpp"
 
 namespace one::testing {
 
@@ -17,11 +19,9 @@ class PlaygroundTest : public ::testing::Test {
 
   ~PlaygroundTest();
 
-  PFN_vkGetInstanceProcAddr GetInstanceProcAddress() const;
-
   bool OpenPlaygroundHere();
 
-  bool IsValid() const { return window_.is_valid(); }
+  bool IsValid() const { return is_valid_; }
 
  private:
   struct UniqueGLFWWindowTraits {
@@ -35,6 +35,11 @@ class PlaygroundTest : public ::testing::Test {
   };
 
   fml::UniqueObject<GLFWwindow*, UniqueGLFWWindowTraits> window_;
+  PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr_ = {};
+  std::unique_ptr<Context> context_;
+  vk::UniqueSurfaceKHR surface_;
+  bool is_valid_ = false;
+
   FML_DISALLOW_COPY_AND_ASSIGN(PlaygroundTest);
 };
 

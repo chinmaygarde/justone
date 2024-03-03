@@ -5,6 +5,7 @@
 #include "capabilities.h"
 #include "fml/macros.h"
 #include "vk.h"
+#include "vulkan/vulkan_handles.hpp"
 
 namespace one {
 
@@ -15,7 +16,8 @@ struct QueueIndexVK {
 
 class Context {
  public:
-  Context(PFN_vkGetInstanceProcAddr proc_address_callback);
+  Context(PFN_vkGetInstanceProcAddr proc_address_callback,
+          const std::set<std::string>& additional_instance_extensions);
 
   ~Context();
 
@@ -23,8 +25,11 @@ class Context {
 
   const Capabilities& GetCapabilities() const { return *caps_; }
 
+  const vk::Instance& GetInstance() const;
+
  private:
   std::unique_ptr<Capabilities> caps_;
+  vk::UniqueInstance instance_;
   QueueIndexVK queue_index_;
   vk::PhysicalDevice physical_device_;
   vk::UniqueDevice device_;

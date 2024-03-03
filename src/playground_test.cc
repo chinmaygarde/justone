@@ -1,15 +1,30 @@
 #include "playground_test.h"
 
+#include <memory>
 #include <mutex>
 
 #include "GLFW/glfw3.h"
+#include "context.h"
 #include "fml/logging.h"
+#include "vulkan/vulkan_core.h"
+#include "vulkan/vulkan_enums.hpp"
+#include "vulkan/vulkan_handles.hpp"
 
 namespace one::testing {
 
 static void InitGLFWOnce() {
   static std::once_flag gOnce;
   std::call_once(gOnce, []() { FML_CHECK(::glfwInit() == GLFW_TRUE); });
+}
+
+static std::set<std::string> GetAdditionalRequiredInstanceExtensions() {
+  std::set<std::string> exts;
+  uint32_t count = 0u;
+  auto extensions = glfwGetRequiredInstanceExtensions(&count);
+  for (size_t i = 0; i < count; i++) {
+    exts.insert(extensions[i]);
+  }
+  return exts;
 }
 
 PlaygroundTest::PlaygroundTest() {
@@ -24,14 +39,31 @@ PlaygroundTest::PlaygroundTest() {
     return;
   }
   window_.reset(window);
+
+  vk_get_instance_proc_addr_ =
+      (PFN_vkGetInstanceProcAddr)::glfwGetInstanceProcAddress(
+          nullptr, "vkGetInstanceProcAddr");
+
+  context_ = std::make_unique<Context>(
+      vk_get_instance_proc_addr_, GetAdditionalRequiredInstanceExtensions());
+  if (!context_ || !context_->IsValid()) {
+    return;
+  }
+
+  VkSurfaceKHR surface = {};
+  if (const auto result = ::glfwCreateWindowSurface(
+          context_->GetInstance(), window_.get(), nullptr, &surface);
+      result != VK_SUCCESS) {
+    FML_LOG(ERROR) << "Could not create surface: "
+                   << vk::to_string(vk::Result(result));
+    return;
+  }
+  surface_ = vk::UniqueSurfaceKHR{surface, context_->GetInstance()};
+
+  is_valid_ = true;
 }
 
 PlaygroundTest::~PlaygroundTest() = default;
-
-PFN_vkGetInstanceProcAddr PlaygroundTest::GetInstanceProcAddress() const {
-  return (PFN_vkGetInstanceProcAddr)::glfwGetInstanceProcAddress(
-      nullptr, "vkGetInstanceProcAddr");
-}
 
 static void PlaygroundKeyCallback(GLFWwindow* window,
                                   int key,

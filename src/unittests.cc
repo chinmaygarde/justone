@@ -7,12 +7,7 @@
 
 namespace one::testing {
 
-TEST_F(PlaygroundTest, CanCreateContext) {
-  Context context(GetInstanceProcAddress());
-  ASSERT_TRUE(context.IsValid());
-}
-
-TEST_F(PlaygroundTest, CanDecodeImage) {
+TEST(JustOne, CanDecodeImage) {
   auto airplane =
       fml::FileMapping::CreateReadOnly(JUSTONE_ASSETS_LOCATION "airplane.jpg");
   ASSERT_TRUE(airplane && airplane->IsValid());

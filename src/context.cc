@@ -9,6 +9,7 @@
 #include "capabilities.h"
 #include "fml/logging.h"
 #include "vk.h"
+#include "vulkan/vulkan_handles.hpp"
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
@@ -82,7 +83,8 @@ static vk::UniqueDevice CreateDevice(const vk::PhysicalDevice& device,
   return device.createDeviceUnique(device_info).value;
 }
 
-Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback) {
+Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback,
+                 const std::set<std::string>& additional_instance_extensions) {
   if (!proc_address_callback) {
     FML_LOG(ERROR) << "Invalid proc. address callback.";
     return;
@@ -108,6 +110,16 @@ Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback) {
     exts.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
   }
 
+  for (const auto& additional_ext : additional_instance_extensions) {
+    if (!caps_->HasExtension(additional_ext)) {
+      FML_LOG(ERROR) << "Additional extension not supported: "
+                     << additional_ext;
+      return;
+    } else {
+      exts.push_back(additional_ext.c_str());
+    }
+  }
+
   vk::ApplicationInfo application_info;
   application_info.pApplicationName = "JustOne";
   application_info.applicationVersion = VK_MAKE_API_VERSION(0, 1, 0, 0);
@@ -119,14 +131,15 @@ Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback) {
   instance_info.setPApplicationInfo(&application_info);
   instance_info.setPEnabledExtensionNames(exts);
   instance_info.flags = instance_flags;
-  auto instance = vk::createInstance(instance_info);
+  auto instance = vk::createInstanceUnique(instance_info);
   if (instance.result != vk::Result::eSuccess) {
     return;
   }
+  instance_ = std::move(instance.value);
 
-  VULKAN_HPP_DEFAULT_DISPATCHER.init(instance.value);
+  VULKAN_HPP_DEFAULT_DISPATCHER.init(*instance_);
 
-  auto physical_device = PickPhysicalDevice(instance.value);
+  auto physical_device = PickPhysicalDevice(*instance_);
   if (!physical_device) {
     return;
   }
@@ -150,6 +163,10 @@ Context::~Context() = default;
 
 bool Context::IsValid() const {
   return is_valid_;
+}
+
+const vk::Instance& Context::GetInstance() const {
+  return *instance_;
 }
 
 }  // namespace one
