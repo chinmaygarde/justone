@@ -100,6 +100,9 @@ bool PlaygroundTest::OpenPlaygroundHere() {
     if (::glfwWindowShouldClose(window_.get())) {
       return true;
     }
+    if (!swapchain_->Render()) {
+      return false;
+    }
   }
 
   return false;

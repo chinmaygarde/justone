@@ -5,7 +5,6 @@
 #include "capabilities.h"
 #include "fml/macros.h"
 #include "vk.h"
-#include "vulkan/vulkan_handles.hpp"
 
 namespace one {
 
@@ -32,12 +31,17 @@ class Context final : public std::enable_shared_from_this<Context> {
 
   const vk::Device& GetDevice() const;
 
+  const QueueIndexVK& GetQueueIndex() const;
+
+  const vk::Queue& GetQueue() const;
+
  private:
   std::unique_ptr<Capabilities> caps_;
   vk::UniqueInstance instance_;
   QueueIndexVK queue_index_;
   vk::PhysicalDevice physical_device_;
   vk::UniqueDevice device_;
+  vk::Queue queue_;
   bool is_valid_ = false;
 
   Context(PFN_vkGetInstanceProcAddr proc_address_callback,

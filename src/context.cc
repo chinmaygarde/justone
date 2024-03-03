@@ -167,6 +167,8 @@ Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback,
     return;
   }
 
+  queue_ = device_->getQueue(queue_index_.family, queue_index_.index);
+
   is_valid_ = true;
 }
 
@@ -190,6 +192,14 @@ const Capabilities& Context::GetCapabilities() const {
 
 const vk::Device& Context::GetDevice() const {
   return *device_;
+}
+
+const QueueIndexVK& Context::GetQueueIndex() const {
+  return queue_index_;
+}
+
+const vk::Queue& Context::GetQueue() const {
+  return queue_;
 }
 
 }  // namespace one
