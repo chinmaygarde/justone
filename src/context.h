@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "capabilities.h"
+#include "fml/concurrent_message_loop.h"
 #include "fml/macros.h"
 #include "vk.h"
 
@@ -35,6 +36,9 @@ class Context final : public std::enable_shared_from_this<Context> {
 
   const vk::Queue& GetQueue() const;
 
+  const std::shared_ptr<fml::ConcurrentTaskRunner>& GetConcurrentTaskRunner()
+      const;
+
  private:
   std::unique_ptr<Capabilities> caps_;
   vk::UniqueInstance instance_;
@@ -42,6 +46,8 @@ class Context final : public std::enable_shared_from_this<Context> {
   vk::PhysicalDevice physical_device_;
   vk::UniqueDevice device_;
   vk::Queue queue_;
+  std::shared_ptr<fml::ConcurrentMessageLoop> concurrent_message_loop_;
+  std::shared_ptr<fml::ConcurrentTaskRunner> concurrent_task_runner_;
   bool is_valid_ = false;
 
   Context(PFN_vkGetInstanceProcAddr proc_address_callback,

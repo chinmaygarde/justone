@@ -241,8 +241,6 @@ bool Swapchain::Render() {
 
   // Do the rendering here.
 
-  // Done rendering. Submit a signal to the semaphore the presentation engine is
-  // going to wait on before presenting.
   {
     vk::SubmitInfo submit_info;
     submit_info.setSignalSemaphores(sync->GetPresentWaitSemaphore());

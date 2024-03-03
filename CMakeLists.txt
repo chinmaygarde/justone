@@ -57,4 +57,5 @@ target_link_libraries(justone
     glfw
     Rpcrt4.lib
     Shlwapi.lib
+    Winmm.lib
 )

@@ -97,6 +97,8 @@ add_library(fml
   platform/win/posix_wrappers_win.cc
   platform/win/wstring_conversion.cc
   platform/win/wstring_conversion.h
+  concurrent_message_loop_factory.cc
+  synchronization/shared_mutex_std.cc
 )
 
 target_include_directories(fml

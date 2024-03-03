@@ -7,6 +7,7 @@
 #include <queue>
 
 #include "capabilities.h"
+#include "fml/concurrent_message_loop.h"
 #include "fml/logging.h"
 #include "vk.h"
 #include "vulkan/vulkan_handles.hpp"
@@ -169,6 +170,10 @@ Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback,
 
   queue_ = device_->getQueue(queue_index_.family, queue_index_.index);
 
+  concurrent_message_loop_ = fml::ConcurrentMessageLoop::Create(4u);
+
+  concurrent_task_runner_ = concurrent_message_loop_->GetTaskRunner();
+
   is_valid_ = true;
 }
 
@@ -200,6 +205,11 @@ const QueueIndexVK& Context::GetQueueIndex() const {
 
 const vk::Queue& Context::GetQueue() const {
   return queue_;
+}
+
+const std::shared_ptr<fml::ConcurrentTaskRunner>&
+Context::GetConcurrentTaskRunner() const {
+  return concurrent_task_runner_;
 }
 
 }  // namespace one
