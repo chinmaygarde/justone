@@ -32,11 +32,12 @@ add_executable(justone
   src/capabilities.h
   src/context.cc
   src/context.h
-  src/macros.h
   src/playground_test.cc
   src/playground_test.h
   src/image_decoder.cc
   src/image_decoder.h
+  src/swapchain.cc
+  src/swapchain.h
   src/unittests.cc
   src/vk.h
 )

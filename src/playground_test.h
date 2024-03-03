@@ -9,6 +9,7 @@
 
 // Must be included after vk.h to enable the Vulkan defines.
 #include "GLFW/glfw3.h"
+#include "swapchain.h"
 #include "vulkan/vulkan_handles.hpp"
 
 namespace one::testing {
@@ -36,8 +37,8 @@ class PlaygroundTest : public ::testing::Test {
 
   fml::UniqueObject<GLFWwindow*, UniqueGLFWWindowTraits> window_;
   PFN_vkGetInstanceProcAddr vk_get_instance_proc_addr_ = {};
-  std::unique_ptr<Context> context_;
-  vk::UniqueSurfaceKHR surface_;
+  std::shared_ptr<Context> context_;
+  std::unique_ptr<Swapchain> swapchain_;
   bool is_valid_ = false;
 
   FML_DISALLOW_COPY_AND_ASSIGN(PlaygroundTest);

@@ -28,7 +28,7 @@ static std::optional<QueueIndexVK> PickQueue(const vk::PhysicalDevice& device,
   // This can be modified to ensure that dedicated queues are returned for each
   // queue type depending on support.
   const auto families = device.getQueueFamilyProperties();
-  for (size_t i = 0u; i < families.size(); i++) {
+  for (uint32_t i = 0u; i < families.size(); i++) {
     if (!(families[i].queueFlags & flags)) {
       continue;
     }
@@ -81,6 +81,17 @@ static vk::UniqueDevice CreateDevice(const vk::PhysicalDevice& device,
   device_info.setPEnabledFeatures(&device_features);
 
   return device.createDeviceUnique(device_info).value;
+}
+
+std::shared_ptr<Context> Context::Make(
+    PFN_vkGetInstanceProcAddr proc_address_callback,
+    const std::set<std::string>& additional_instance_extensions) {
+  auto context = std::shared_ptr<Context>(
+      new Context(proc_address_callback, additional_instance_extensions));
+  if (!context->IsValid()) {
+    return nullptr;
+  }
+  return context;
 }
 
 Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback,

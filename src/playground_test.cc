@@ -6,6 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "context.h"
 #include "fml/logging.h"
+#include "swapchain.h"
 #include "vulkan/vulkan_core.h"
 #include "vulkan/vulkan_enums.hpp"
 #include "vulkan/vulkan_handles.hpp"
@@ -44,9 +45,9 @@ PlaygroundTest::PlaygroundTest() {
       (PFN_vkGetInstanceProcAddr)::glfwGetInstanceProcAddress(
           nullptr, "vkGetInstanceProcAddr");
 
-  context_ = std::make_unique<Context>(
-      vk_get_instance_proc_addr_, GetAdditionalRequiredInstanceExtensions());
-  if (!context_ || !context_->IsValid()) {
+  context_ = Context::Make(vk_get_instance_proc_addr_,
+                           GetAdditionalRequiredInstanceExtensions());
+  if (!context_) {
     return;
   }
 
@@ -58,7 +59,13 @@ PlaygroundTest::PlaygroundTest() {
                    << vk::to_string(vk::Result(result));
     return;
   }
-  surface_ = vk::UniqueSurfaceKHR{surface, context_->GetInstance()};
+
+  swapchain_ = std::make_unique<Swapchain>(
+      context_, vk::UniqueSurfaceKHR{surface, context_->GetInstance()});
+
+  if (!swapchain_ || !swapchain_->IsValid()) {
+    return;
+  }
 
   is_valid_ = true;
 }

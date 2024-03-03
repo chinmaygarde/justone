@@ -10,14 +10,15 @@
 namespace one {
 
 struct QueueIndexVK {
-  size_t family = 0u;
-  size_t index = 0u;
+  uint32_t family = 0u;
+  uint32_t index = 0u;
 };
 
-class Context {
+class Context final : public std::enable_shared_from_this<Context> {
  public:
-  Context(PFN_vkGetInstanceProcAddr proc_address_callback,
-          const std::set<std::string>& additional_instance_extensions);
+  static std::shared_ptr<Context> Make(
+      PFN_vkGetInstanceProcAddr proc_address_callback,
+      const std::set<std::string>& additional_instance_extensions);
 
   ~Context();
 
@@ -27,6 +28,12 @@ class Context {
 
   const vk::Instance& GetInstance() const;
 
+  const vk::PhysicalDevice& GetPhysicalDevice() const {
+    return physical_device_;
+  }
+
+  const vk::Device& GetDevice() const { return *device_; }
+
  private:
   std::unique_ptr<Capabilities> caps_;
   vk::UniqueInstance instance_;
@@ -34,6 +41,9 @@ class Context {
   vk::PhysicalDevice physical_device_;
   vk::UniqueDevice device_;
   bool is_valid_ = false;
+
+  Context(PFN_vkGetInstanceProcAddr proc_address_callback,
+          const std::set<std::string>& additional_instance_extensions);
 
   FML_DISALLOW_COPY_AND_ASSIGN(Context);
 };
