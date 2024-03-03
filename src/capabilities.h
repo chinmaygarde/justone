@@ -15,11 +15,9 @@ class Capabilities {
 
   ~Capabilities();
 
-  bool IsValid() const { return is_valid_; }
+  bool IsValid() const;
 
-  bool HasExtension(const std::string& ext) const {
-    return extensions_.contains(ext);
-  }
+  bool HasExtension(const std::string& ext) const;
 
   static void DumpToLog();
 

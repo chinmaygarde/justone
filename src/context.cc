@@ -19,9 +19,9 @@ static const std::vector<std::string> kRequiredDeviceExtensions = {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 };
 
-static constexpr auto kAllCapsQueue = vk::QueueFlagBits::eGraphics |
-                                      vk::QueueFlagBits::eCompute |
-                                      vk::QueueFlagBits::eTransfer;
+static constexpr auto kAllCapabilitiesQueue = vk::QueueFlagBits::eGraphics |
+                                              vk::QueueFlagBits::eCompute |
+                                              vk::QueueFlagBits::eTransfer;
 
 static std::optional<QueueIndexVK> PickQueue(const vk::PhysicalDevice& device,
                                              vk::QueueFlags flags) {
@@ -48,7 +48,7 @@ static vk::PhysicalDevice PickPhysicalDevice(const vk::Instance& instance) {
                                               kRequiredDeviceExtensions)) {
       return {};
     }
-    if (!PickQueue(physical_device, kAllCapsQueue).has_value()) {
+    if (!PickQueue(physical_device, kAllCapabilitiesQueue).has_value()) {
       return {};
     }
     return physical_device;
@@ -156,7 +156,7 @@ Context::Context(PFN_vkGetInstanceProcAddr proc_address_callback,
   }
   physical_device_ = physical_device;
 
-  auto queue_index = PickQueue(physical_device, kAllCapsQueue);
+  auto queue_index = PickQueue(physical_device, kAllCapabilitiesQueue);
   if (!queue_index.has_value()) {
     return;
   }
@@ -178,6 +178,18 @@ bool Context::IsValid() const {
 
 const vk::Instance& Context::GetInstance() const {
   return *instance_;
+}
+
+const vk::PhysicalDevice& Context::GetPhysicalDevice() const {
+  return physical_device_;
+}
+
+const Capabilities& Context::GetCapabilities() const {
+  return *caps_;
+}
+
+const vk::Device& Context::GetDevice() const {
+  return *device_;
 }
 
 }  // namespace one

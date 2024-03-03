@@ -128,4 +128,8 @@ Swapchain::Swapchain(const std::shared_ptr<Context>& context,
 
 Swapchain::~Swapchain() = default;
 
+bool Swapchain::IsValid() const {
+  return is_valid_;
+}
+
 }  // namespace one

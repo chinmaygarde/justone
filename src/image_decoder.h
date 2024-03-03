@@ -14,9 +14,9 @@ class ImageDecoder {
 
   ~ImageDecoder();
 
-  glm::ivec2 GetSize() const { return size_; }
+  bool IsValid() const;
 
-  bool IsValid() const { return is_valid_; }
+  glm::ivec2 GetSize() const;
 
  private:
   std::unique_ptr<fml::Mapping> decoded_;

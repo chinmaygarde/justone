@@ -17,7 +17,7 @@ class Swapchain {
 
   ~Swapchain();
 
-  bool IsValid() const { return true; }
+  bool IsValid() const;
 
  private:
   std::weak_ptr<Context> context_;

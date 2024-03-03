@@ -22,7 +22,7 @@ class PlaygroundTest : public ::testing::Test {
 
   bool OpenPlaygroundHere();
 
-  bool IsValid() const { return is_valid_; }
+  bool IsValid() const;
 
  private:
   struct UniqueGLFWWindowTraits {

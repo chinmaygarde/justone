@@ -72,6 +72,10 @@ PlaygroundTest::PlaygroundTest() {
 
 PlaygroundTest::~PlaygroundTest() = default;
 
+bool PlaygroundTest::IsValid() const {
+  return is_valid_;
+}
+
 static void PlaygroundKeyCallback(GLFWwindow* window,
                                   int key,
                                   int scancode,

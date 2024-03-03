@@ -92,4 +92,12 @@ bool Capabilities::DeviceHasAllExtensions(
   return true;
 }
 
+bool Capabilities::IsValid() const {
+  return is_valid_;
+}
+
+bool Capabilities::HasExtension(const std::string& ext) const {
+  return extensions_.contains(ext);
+}
+
 }  // namespace one

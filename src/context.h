@@ -24,15 +24,13 @@ class Context final : public std::enable_shared_from_this<Context> {
 
   bool IsValid() const;
 
-  const Capabilities& GetCapabilities() const { return *caps_; }
+  const Capabilities& GetCapabilities() const;
 
   const vk::Instance& GetInstance() const;
 
-  const vk::PhysicalDevice& GetPhysicalDevice() const {
-    return physical_device_;
-  }
+  const vk::PhysicalDevice& GetPhysicalDevice() const;
 
-  const vk::Device& GetDevice() const { return *device_; }
+  const vk::Device& GetDevice() const;
 
  private:
   std::unique_ptr<Capabilities> caps_;

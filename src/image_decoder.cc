@@ -32,4 +32,12 @@ ImageDecoder::ImageDecoder(const fml::Mapping& source) {
 
 ImageDecoder::~ImageDecoder() = default;
 
+bool ImageDecoder::IsValid() const {
+  return is_valid_;
+}
+
+glm::ivec2 ImageDecoder::GetSize() const {
+  return size_;
+}
+
 }  // namespace one
